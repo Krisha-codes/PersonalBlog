@@ -22,7 +22,7 @@ public class User {
 
     @Column(nullable = false)
     private String password;
-
+    //Constructors
     public User() {}
 
     public User(String username, String password) {
