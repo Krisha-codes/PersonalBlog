@@ -5,6 +5,7 @@ import com.example.PersonalBlog.repository.UserRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import java.security.Principal;
 
 @Controller
@@ -18,11 +19,14 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String profilePage(Model model, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName());
+        // Use orElseThrow to throw an exception if the user is not found
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Add attributes to the model
         model.addAttribute("username", user.getUsername());
         model.addAttribute("email", user.getEmail());
 
-        return "profile";
+        return "profile";//return profile.html
     }
 }
-
