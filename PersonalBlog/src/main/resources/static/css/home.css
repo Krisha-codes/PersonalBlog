@@ -46,30 +46,37 @@ header {
 .container {
     display: flex;
     margin: 20px;
+    gap: 20px;
 }
 
+/* Sidebar */
 .sidebar {
     width: 250px;
     background: #023e8a;
     padding: 15px;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
-
-.sidebar li {
-    margin: 15px 0;
-}
-
-.sidebar a {
-    color: white;
-    text-decoration: none;
+.sidebar button {
+    background: white;
+    color: #023e8a;
+    border: none;
+    padding: 10px;
     font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
 }
 
+.sidebar button:hover {
+    background: #0077b6;
+    color: white;
+}
+
+/* Main Content */
 .content {
     flex-grow: 1;
     padding: 20px;
@@ -78,21 +85,47 @@ header {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-    color: #0077b6;
-}
-
-.articles {
+/* New Article Form */
+#new-article-form {
+    display: none;
     margin-top: 20px;
+    padding: 15px;
+    background: #e3f2fd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.articles ul {
-    list-style: none;
-    padding: 0;
-}
-
-.articles li a {
-    text-decoration: none;
+#new-article-form h2 {
     color: #023e8a;
-    font-weight: bold;
 }
+
+#new-article-form input,
+#new-article-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#new-article-form button {
+    background: #0077b6;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#new-article-form button:hover {
+    background: #023e8a;
+}
+
+/* My Articles Panel */
+.articles-panel {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f

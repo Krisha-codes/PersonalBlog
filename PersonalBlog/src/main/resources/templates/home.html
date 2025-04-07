@@ -1,45 +1,67 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home - Personal Blog</title>
+    <title>Home | Personal Blog</title>
     <link rel="stylesheet" th:href="@{/css/home.css}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+    <script>
+        function showArticleForm() {
+            document.getElementById("new-article-form").style.display = "block";
+        }
+
+        function loadAllArticles() {
+            fetch("/home/all-articles")
+                .then(response => response.json())
+                .then(articles => {
+                    let articleList = document.getElementById("article-list");
+                    articleList.innerHTML = ""; // Clear existing content
+
+                    articles.forEach(article => {
+                        let title = article.title.length > 10 ? article.title.substring(0, 10) + "..." : article.title;
+                        let li = document.createElement("li");
+                        li.textContent = title;
+                        articleList.appendChild(li);
+                    });
+
+                    document.getElementById("show-more").style.display = "none"; // Hide button
+                });
+        }
+    </script>
 </head>
 <body>
-<header>
-    <div class="logo">
-        <img src="/images/logo.png" alt="Blog Logo">
-    </div>
-    <div class="user-info">
-        <span>Welcome, <span th:text="${username}">User</span>!</span>
-        <a href="/profile" class="profile-icon">👤</a>
-        <a href="/logout" class="logout-button">Logout</a>
-    </div>
-</header>
 
 <div class="container">
     <aside class="sidebar">
-        <ul>
-            <li><a href="/profile">📄 My Profile</a></li>
-            <li><a href="/new-article">✍️ New Article</a></li>
-            <li><a href="/my-articles">📜 My Articles</a></li>
-            <li><a href="/publish">🚀 Publish</a></li>
-        </ul>
+        <button onclick="window.location.href='/profile'">My Profile</button>
+        <button onclick="showArticleForm()">New Article</button>
+        <button onclick="window.location.href='/my-articles'">My Articles</button>
+        <button onclick="window.location.href='/published-articles'">Published Articles</button>
     </aside>
 
     <main class="content">
-        <h1>Welcome to Your Blog</h1>
-        <p>Start sharing your thoughts with the world!</p>
+        <h1>Welcome, <span th:text="${username}"></span>!</h1>
 
-        <div class="articles">
+        <!-- New Article Form (Initially Hidden) -->
+        <div id="new-article-form" style="display: none;">
+            <h2>Create a New Article</h2>
+            <form th:action="@{/home/save-article}" method="post">
+                <input type="text" name="title" placeholder="Article Title" required>
+                <textarea name="content" placeholder="Write your article here..." required></textarea>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+
+        <!-- My Articles Panel -->
+        <div class="articles-panel">
             <h2>My Articles</h2>
-            <ul>
-                <li th:each="article : ${articles}">
-                    <a th:href="@{/article/{id}(id=${article.id})}" th:text="${article.title}"></a>
+            <ul id="article-list">
+                <li th:each="article : ${topArticles}">
+                    <span th:text="${#strings.length(article.title) > 10 ? article.title.substring(0, 10) + '...' : article.title}"></span>
                 </li>
             </ul>
+            <button id="show-more" onclick="loadAllArticles()">Show More</button>
         </div>
     </main>
 </div>
+
 </body>
 </html>

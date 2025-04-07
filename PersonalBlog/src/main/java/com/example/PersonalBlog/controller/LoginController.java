@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
 public class LoginController {
 
@@ -24,13 +26,31 @@ public class LoginController {
     @GetMapping("/login")
     public String showLoginPage(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
-            model.addAttribute("error", "Invalid username or password.");
+            model.addAttribute("error", "Invalid username, email, or password.");
         }
         return "login";
     }
 
     @PostMapping("/login")
-    public String processLogin(@RequestParam String username, @RequestParam String password, Model model) {
+    public String processLogin(@RequestParam String username,
+                               @RequestParam String email,
+                               @RequestParam String password,
+                               Model model) {
+        Optional<User> optionalUser = userService.findByUsername(username);
+
+        if (optionalUser.isEmpty()) {
+            model.addAttribute("error", "Invalid username or password.");
+            return "login";
+        }
+
+        User user = optionalUser.get();
+
+        // Check if the email matches
+        if (!user.getEmail().equals(email)) {
+            model.addAttribute("error", "Email does not match the registered username.");
+            return "login";
+        }
+
         if (userService.isAccountLocked(username)) {
             model.addAttribute("error", "Your account is locked due to too many failed login attempts.");
             return "login";
@@ -41,13 +61,12 @@ public class LoginController {
                     new UsernamePasswordAuthenticationToken(username, password)
             );
 
-            User user = userService.findByUsername(username).orElseThrow();
             userService.resetFailedAttempts(user);
             return "redirect:/home";
 
         } catch (AuthenticationException e) {
-            userService.findByUsername(username).ifPresent(userService::increaseFailedAttempts);
-            model.addAttribute("error", "Invalid username or password.");
+            userService.increaseFailedAttempts(user);
+            model.addAttribute("error", "Invalid username, email, or password.");
             return "login";
         }
     }

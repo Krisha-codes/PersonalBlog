@@ -10,11 +10,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String bio;  // Add bio
+    private String socialLinks; //Add social links
+    private String profilePicture; //Add profile picture URL
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = true)
     private String email;
 
     @Column(nullable = false)
@@ -105,6 +107,15 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
+
+    public String getSocialLinks() { return socialLinks; }
+    public void setSocialLinks(String socialLinks) { this.socialLinks = socialLinks; }
+
+    public String getProfilePicture() { return profilePicture; }
+    public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
+
 
     public boolean isAccountLocked() {
         return accountLocked;

@@ -1,47 +1,64 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Profile</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 500px;
-            margin: auto;
-            padding: 20px;
-            text-align: center;
-        }
-        h2 {
-            color: #2c3e50;
-        }
-        .profile-box {
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-        }
-        .back-btn {
-            margin-top: 20px;
-            background-color: #e74c3c;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-        }
-    </style>
+    <title>Profile | Personal Blog</title>
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
 </head>
 <body>
 
-<h2>User Profile</h2>
+<div class="profile-container">
+    <button class="save-btn" onclick="document.getElementById('profile-form').submit()">Save Changes</button>
 
-<div class="profile-box">
-    <p><strong>Username:</strong> <span th:text="${username}"></span></p>
-    <p><strong>Email:</strong> <span th:text="${email}"></span></p>
+    <h1>Profile</h1>
+
+    <form id="profile-form" th:action="@{/profile/update}" method="post" enctype="multipart/form-data">
+        <div class="profile-picture-container">
+            <label for="profilePicUpload">
+                <img th:src="${user.profilePicture}" onerror="this.src='/images/default-avatar.png'" id="profile-image" class="profile-pic" alt="Profile Picture">
+                <input type="file" id="profilePicUpload" name="profilePic" style="display: none;" onchange="previewImage(event)">
+            </label>
+        </div>
+
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" name="username" th:value="${user.username}" readonly>
+        </div>
+
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" name="email" th:value="${user.email}" readonly>
+        </div>
+
+        <div class="input-group">
+            <label>Bio</label>
+            <textarea name="bio" th:text="${user.bio}"></textarea>
+        </div>
+
+        <div class="input-group">
+            <label>Social Links</label>
+            <input type="text" name="socialLinks" th:value="${user.socialLinks}">
+        </div>
+    </form>
+
+    <div class="recent-activity">
+        <h2>Recent Activity</h2>
+        <ul>
+            <li>Liked a post</li>
+            <li>Commented on an article</li>
+        </ul>
+    </div>
 </div>
 
-<a href="/home" class="back-btn">Back to Home</a>
+<script>
+    function previewImage(event) {
+        let reader = new FileReader();
+        reader.onload = function(){
+            let output = document.getElementById('profile-image');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
 
 </body>
 </html>
