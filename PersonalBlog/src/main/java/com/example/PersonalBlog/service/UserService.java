@@ -25,10 +25,12 @@ public class UserService {
     }
 
     // Updated registerUser method to accept username and password separately
-    public void registerUser(String username, String password) {
+    public void registerUser(String username, String password, String email) {
         // Create a new User object
         User user = new User();
         user.setUsername(username);
+        user.setEmail(email);
+        user.setEnabled(true);
         user.setPassword(passwordEncoder.encode(password)); // Encrypt password
         userRepository.save(user);  // Save the user to the database
     }

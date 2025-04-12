@@ -20,8 +20,8 @@ public class SignupController {
     }
 
     @PostMapping("/signup")
-    public String registerUser(@RequestParam String username, @RequestParam String password, Model model) {
-        userService.registerUser(username, password);
+    public String registerUser(@RequestParam String username, @RequestParam String password, @RequestParam String email, Model model) {
+        userService.registerUser(username, password, email);
         model.addAttribute("message", "Signup successful!");
         return "success";  // Redirects to a success page
     }

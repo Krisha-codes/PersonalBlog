@@ -28,7 +28,7 @@ public class AuthController {
     @PostMapping("/signup")
     public String signup(@ModelAttribute User user) {
         // Pass username and password separately to the registerUser method
-        userService.registerUser(user.getUsername(), user.getPassword());
+        userService.registerUser(user.getUsername(), user.getPassword(), user.getEmail());
         return "redirect:/auth/login"; // Redirect to login page after signup
     }
 
